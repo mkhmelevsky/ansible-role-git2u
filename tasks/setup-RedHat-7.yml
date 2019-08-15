@@ -1,0 +1,46 @@
+---
+# file: tasks/setup-common-RedHat.yml
+
+- name: Install Git2U packages
+  become: True
+  block:
+    - name: Remove Git if exists
+      yum:
+        name: git
+        state: absent
+      register: task_result
+      retries: 3
+      delay: 2
+      until: task_result is succeeded
+
+    - name: Disable Yum GPG checks by default
+      lineinfile:
+        backup: yes
+        dest: /etc/yum.conf
+        state: present
+        regexp: "^gpgcheck=.*"
+        line: "gpgcheck=0"
+      register: task_result
+      retries: 3
+      delay: 2
+      until: task_result is succeeded
+
+    - name: Install IUS repository
+      yum:
+        name: '{{ git2u_rpm_url }}'
+        state: present
+      register: task_result
+      retries: 3
+      delay: 2
+      until: task_result is succeeded
+
+    - name: Install Git2U packages
+      yum:
+        name: git2u-all
+        state: present
+      register: task_result
+      retries: 3
+      delay: 2
+      until: task_result is succeeded
+
+...

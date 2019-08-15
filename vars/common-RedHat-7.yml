@@ -1,0 +1,4 @@
+---
+# file: vars/common-RedHat.yml
+
+git2u_rpm_url: 'https://centos7.iuscommunity.org/ius-release.rpm'
